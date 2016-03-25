@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>CodePlayer</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+        
+        nav {
+            text-align: center;
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            font-family: sans-serif;
+        }
+        
+        textarea {
+            resize: none;
+            border: none;
+            border-right: 1px solid black;
+        }
+        
+        iframe {
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+        
+        .btn-group {
+            padding-right: 104px;
+        }
+        
+        #runJs {
+            position: absolute;
+        }
+        
+        .field {
+            width: 50%;
+            height: 100%;
+            float: left;
+        }
+        
+        #cssField {
+            display: none;
+        }
+        
+        #javascriptField {
+            display: none;
+        }
+        
+        .textarea {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #fields {
+            height: calc(100% - 57px);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-light bg-faded">
+
+        <a id="logo" class="navbar-brand" href="#">CodePlayer</a>
+
+        <div class="btn-group" role="group">
+
+            <button type="button" class="btn btn-primary active toggled" data-toggle="button" aria-pressed="true" id="html">HTML</button>
+
+            <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" id="css">CSS</button>
+
+            <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" id="javascript">JavaScript</button>
+
+            <button type="button" class="btn btn-primary active toggled" data-toggle="button" aria-pressed="true" id="output">Output</button>
+
+        </div>
+
+        <button type="button" class="btn btn-secondary" id="runJs">Run JS</button>
+
+    </nav>
+
+    <div id="fields">
+
+        <div class="field" id="htmlField">
+
+            <textarea class="textarea" id="htmlText"><p>Lorem Ipsum</p></textarea>
+
+        </div>
+
+        <div class="field" id="cssField">
+
+            <textarea class="textarea" id="cssText">p{color:red;}</textarea>
+
+        </div>
+
+        <div class="field" id="javascriptField">
+
+            <textarea class="textarea" id="javascriptText">alert("Boo!");</textarea>
+
+        </div>
+
+        <div class="field" id="outputField">
+
+            <iframe class="textarea" id="outputFrame"></iframe>
+
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://raw.githubusercontent.com/HubSpot/tether/master/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var active = 2;
+
+        function setWidth() {
+            if (active > 0) {
+                $(".field").css({
+                    "width": (100 / active) + "%"
+                });
+            }
+        }
+
+        function toggleField(button, field) {
+            $(button).toggleClass("toggled");
+            $(field).toggle();
+            if ($(button).hasClass("toggled")) {
+                active++;
+            } else {
+                active--;
+            }
+        }
+
+        $("#html").click(function() {
+            toggleField("#html", "#htmlField");
+            setWidth();
+        });
+
+        $("#css").click(function() {
+            toggleField("#css", "#cssField");
+            setWidth();
+        });
+
+        $("#javascript").click(function() {
+            toggleField("#javascript", "#javascriptField");
+            setWidth();
+        });
+
+        $("#output").click(function() {
+            toggleField("#output", "#outputField");
+            setWidth();
+        });
+
+        function updateAll() {
+            $("#outputFrame").contents().find("html").html("<html><head><style type='text/css'>" + $("#cssText").val() + "</style></head><body>" + $("#htmlText").val() + "</body></html>");
+
+            document.getElementById("outputFrame").contentWindow.eval($("#javascriptText").val());
+        }
+
+        function update() {
+            $("#outputFrame").contents().find("html").html("<html><head><style type='text/css'>" + $("#cssText").val() + "</style></head><body>" + $("#htmlText").val() + "</body></html>");
+        }
+
+        update();
+
+        $("#htmlText, #cssText").keyup(function() {
+            update();
+        });
+
+        $("#runJs").click(function() {
+            updateAll();
+        });
+        
+        $('[data-toggle="tooltip"]').tooltip()
+
+    </script>
+
+</body>
+
+</html>
